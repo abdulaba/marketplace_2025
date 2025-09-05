@@ -1,10 +1,10 @@
 class Api::V1::TokensController < ApplicationController
-  
   def create
     @user = User.find_by_email(user_params[:email])
     if @user&.authenticate(user_params[:password])
+      token = JsonWebTokenService.encode(user: @user.id )
       render json: {
-        token: JsonWebToken.encode(user: @user.id),
+        token: token,
         email: @user.email
       }
     else
@@ -12,7 +12,7 @@ class Api::V1::TokensController < ApplicationController
     end
   end
 
-  private 
+  private
 
   def user_params
     params.require(:user).permit(:email, :password)
