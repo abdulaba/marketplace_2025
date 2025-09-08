@@ -50,3 +50,7 @@ end
 gem "bcrypt", "~> 3.1"
 
 gem "jwt", "~> 3.1"
+<<<<<<< HEAD
+gem 'dotenv-rails', groups: [:development, :test]
+=======
+>>>>>>> a3857f16c1f1acc62722de29799d64e1f75480db
