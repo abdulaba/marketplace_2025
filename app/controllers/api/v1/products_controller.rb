@@ -1,5 +1,6 @@
 class Api::V1::ProductsController < ApplicationController
   before_action :set_product, only: %i[show update destroy]
+  before_action :authenticate_user!, only: %i[update destroy create ]
 
   def index
     products = Product.all
@@ -10,7 +11,7 @@ class Api::V1::ProductsController < ApplicationController
   end
 
   def create
-    product = current_user.products.build(set_product)
+    product = current_user.products.build(product_params)
     if product.save
       render json: product, status: :created
     else
@@ -28,7 +29,7 @@ class Api::V1::ProductsController < ApplicationController
 
   def destroy
     @product.destroy
-    status: see_other
+    head :no_content
   end
 
   private
