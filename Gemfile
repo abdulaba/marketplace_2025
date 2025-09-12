@@ -51,3 +51,5 @@ gem "bcrypt", "~> 3.1"
 
 gem "jwt", "~> 3.1"
 gem 'dotenv-rails', groups: [:development, :test]
+
+gem 'jsonapi-serializer', '~> 2.2'

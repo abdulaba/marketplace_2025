@@ -15,19 +15,21 @@ class Api::V1::ProductsController < ApplicationController
     if product.save
       render json: product, status: :created
     else
-      render json: product.errors.full_message, status: 422
+      render json: { errors: product.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def update
-    if @product.update(set_product)
+    authorize_product_owner!
+    if @product.update(product_params)
       render json: @product, status: :ok
     else
-      render json: product.errors.full_message, status: 422
+      render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def destroy
+    authorize_product_owner!
     @product.destroy
     head :no_content
   end
@@ -40,5 +42,13 @@ class Api::V1::ProductsController < ApplicationController
 
   def set_product
     @product = Product.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Producto no encontrado" }, status: :not_found
+  end
+
+  def authorize_product_owner!
+    unless @product.user == current_user
+      render json: { error: "No autorizado" }, status: :forbidden
+    end
   end
 end
